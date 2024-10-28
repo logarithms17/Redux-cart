@@ -1,29 +1,23 @@
+import { useDispatch } from 'react-redux';
+
+import { cartActions } from '../../store/cartSlice';
 import Card from '../UI/Card';
 import classes from './ProductItem.module.css';
-import { useDispatch } from 'react-redux';
-import { addItem } from '../../store/cartSlice';
-import { toggle } from '../../store/uiSlice';
-import { useSelector } from 'react-redux';
 
 const ProductItem = (props) => {
-  const { title, price, description } = props;
   const dispatch = useDispatch();
 
-  const showModal = useSelector(state => state.ui.cartIsVisible)
+  const { title, price, description, id } = props;
 
-  const handleAddItem = () => {
-    if (!showModal) {
-      dispatch(toggle())
-    }
-    
+  const addToCartHandler = () => {
     dispatch(
-      addItem({
-        name: title,
-        amount: 1,
-        price
+      cartActions.addItemToCart({
+        id,
+        title,
+        price,
       })
-    )
-  }
+    );
+  };
 
   return (
     <li className={classes.item}>
@@ -34,7 +28,7 @@ const ProductItem = (props) => {
         </header>
         <p>{description}</p>
         <div className={classes.actions}>
-          <button onClick={handleAddItem}>Add to Cart</button>
+          <button onClick={addToCartHandler}>Add to Cart</button>
         </div>
       </Card>
     </li>
